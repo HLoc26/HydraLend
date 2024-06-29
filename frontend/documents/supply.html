@@ -6,11 +6,14 @@
     <link rel="stylesheet" href="../styles/tailwind.css" />
     <link rel="stylesheet" href="../styles/custom.css" />
     <script type="module" src="../scripts/ethers-5.1.esm.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display&display=swap" rel="stylesheet" />
 
     <title>HydraLend</title>
   </head>
-  <body>
-    <nav class="flex justify-between gap-4 center-item bg-blue-100 text-2xl">
+  <body class="h-screen">
+    <nav class="flex justify-between gap-4 center-item text-2xl">
       <div id="logo" class="flex gap-4">
         <a href="#">
           <img src="../img/apple-touch-icon.png" alt="Logo" width="30px" height="30px" />
@@ -23,8 +26,8 @@
           <i class="fas fa-angle-down" aria-hidden="false"></i>
         </button>
         <div id="dropdown-content">
-          <a href="#" id="erc20">ERC20</a>
-          <a href="#" id="erc721">ERC721</a>
+          <a href="#" id="erc20">Pledge ERC20</a>
+          <a href="#" id="erc721">Pledge ERC721</a>
         </div>
       </div>
       <a href="#" id="supply">Supply</a>
@@ -35,22 +38,22 @@
       </div>
     </nav>
 
-    <section id="content-container" class="bg-red-100 h-xl justify-center center-item">
+    <section id="content-container" class="h-xl justify-center center-item">
       <div id="title" class="block m-10 text-center text-5xl">Supply ERC20</div>
-      <div id="transac-container" class="grid grid-rows-12 grid-cols-12 bg-yellow-100 w-1/2 m-auto text-xl gap-1 p-3 rounded-xl pt-6">
+      <div id="transac-container" class="grid grid-rows-12 grid-cols-12 w-1/2 m-auto text-xl gap-1 p-3 rounded-xl pt-6">
         <!-- input label -->
         <div class="col-span-2 row-start-2 row-span-2 flex justify-center items-center">
           <label for="amount" class="">Amount: </label>
         </div>
         <!-- input -->
         <div class="col-span-8 row-span-3 flex items-end">
-          <input type="text" id="amount" class="rounded-md h-3/5 w-full p-3" placeholder="0.0" />
+          <input type="text" id="amount" class="rounded-md h-3/5 w-full p-3 bg-black" placeholder="0.0" />
         </div>
         <!-- select unit -->
         <div class="col-span-2 row-span-3 flex justify-center items-end">
-          <select name="unit" id="unit" class="h-3/5 w-4/5 pl-3 rounded-md cursor-pointer">
-            <option value="ether" default>ETH</option>
-            <option value="avax">AVAX</option>
+          <select name="unit" id="unit" class="h-3/5 w-4/5 pl-3 rounded-md cursor-pointer bg-black text-white">
+            <option value="avax" selected>AVAX</option>
+            <option value="ether">ETH</option>
           </select>
         </div>
         <!-- balance -->
@@ -60,7 +63,7 @@
           <span id="selected-unit"></span>
         </div>
         <!-- changes info here when changin between supply and borrow -->
-        <div id="#side-info" class="max-h-1/6 bg-pink-100 grid grid-cols-4 grid-rows-2 col-start-2 col-end-12 row-span-6">
+        <div id="side-info" class="max-h-1/6 grid grid-cols-4 grid-rows-2 col-start-2 col-end-12 row-span-6 rounded-md">
           <div id="side-info-1-tt" class="flex justify-center items-center">side info 1 tt</div>
           <div id="side-info-1" class="flex justify-center items-center">side info 1</div>
           <div id="side-info-2-tt" class="flex justify-center items-center">side info 2 tt</div>
@@ -73,7 +76,7 @@
         <!-- Supply APY -->
         <!-- Distribution APY -->
         <div class="flex col-span-12 justify-center items-center row-span-2">
-          <button class="border-8 border-blue-500">Confirm</button>
+          <button class="bg-green-500 p-2 rounded-xl">Confirm</button>
         </div>
       </div>
     </section>

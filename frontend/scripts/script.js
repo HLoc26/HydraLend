@@ -11,10 +11,10 @@ const supply = document.getElementById("supply");
 const title = document.getElementById("title");
 
 borrow20.addEventListener("click", () => {
-  title.textContent = "Borrow ERC20";
+  title.textContent = "Borrow by pledging ERC20 (Tokens)";
 });
 borrow721.addEventListener("click", () => {
-  title.textContent = "Borrow ERC721";
+  title.textContent = "Borrow by pledging ERC721 (NFTs)";
 });
 supply.addEventListener("click", () => {
   title.textContent = "Supply ERC20";
