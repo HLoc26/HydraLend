@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.18;
 
-interface Struct {
+interface Structs {
     enum TokenType {
         ERC20,
         ERC721

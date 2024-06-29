@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.18;
 
-
-
 interface FlashLoanReceiverInterface {
     /**
      * @param initiator ng bat dau khoan vay
