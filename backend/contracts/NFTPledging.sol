@@ -2,17 +2,17 @@
 pragma solidity ^0.8.18;
 
 import {TokenSupporter} from "./TokenSupporter.sol";
-import "@openzeppelin/contract/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import "@openzeppelin/cotracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "../interfaces/Structs.sol";
 
 contract NFTPledging is TokenSupporter, IERC721Receiver {
-    using EnumerableSet for EnumerableSet.UnitSet;
+    using EnumerableSet for EnumerableSet.UintSet;
 
     error InvalidNFT();
 
-    mapping(address user => mapping(address nft => EnumerableSet.UnitSet tokenIds)) depositedNFTs;
+    mapping(address user => mapping(address nft => EnumerableSet.UintSet tokenIds)) depositedNFTs;
 
     function _depositNFT(address nftAddress, uint256 tokenId) internal {
         allowedToken(nftAddress);
@@ -29,10 +29,10 @@ contract NFTPledging is TokenSupporter, IERC721Receiver {
         address recipient,
         address nftAddress,
         uint256 tokenId
-    ) internla {
+    ) internal {
         if (!hasDepositedNFT(owner, nftAddress, tokenId)) revert InvalidNFT();
-        depositedNFTs[owner][nftaddress].remove(tokenId);
-        IERC72(nftAddress).safeTransferFrom(
+        depositedNFTs[owner][nftAddress].remove(tokenId);
+        IERC721(nftAddress).safeTransferFrom(
             address(this), recipient, tokenId
         );
     }
@@ -42,7 +42,7 @@ contract NFTPledging is TokenSupporter, IERC721Receiver {
         address nftAddress,
         uint256 tokenId
     ) public view returns (bool) {
-        returns depositedNFTs[owner][nftAddress].contains(tokenId);
+        return depositedNFTs[owner][nftAddress].contains(tokenId);
     }
 
     function getDepositedNFT(
@@ -62,7 +62,7 @@ contract NFTPledging is TokenSupporter, IERC721Receiver {
         address,
         uint256,
         bytes calldata
-    ) external pure override returns (bytes64) {
+    ) external pure override returns (bytes4) {
         return IERC721Receiver.onERC721Received.selector;
     }
 }

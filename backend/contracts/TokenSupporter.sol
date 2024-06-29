@@ -42,14 +42,14 @@ contract TokenSupporter is Constants {
     }
 
     function getTokenPrice(address token) public view returns (uint256 price) {
-        if (!supportedTokens[token].supported) return 0;
+        if (!supportedToken[token].supported) return 0;
         AggregatorV3Interface priceFeed = AggregatorV3Interface(
-            supportedTokens[token].usdPriceFeed
+            supportedToken[token].usdPriceFeed
         );
         price = priceFeed.getPrice();
     }
 
     function allowedToken(address token) internal view {
-        if (!supportedTokens[token].supported) revert TokenNotSupported();
+        if (!supportedToken[token].supported) revert TokenNotSupported();
     }
 }

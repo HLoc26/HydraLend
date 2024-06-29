@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Pausing is Ownable {
 
-    bool public globalPaused = false;
+    bool public globalPaused = true;
 
     mapping (address vaulToken => bool status) vaultPaused;
 
