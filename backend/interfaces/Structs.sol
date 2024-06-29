@@ -25,7 +25,7 @@ interface Structs {
     }
 
     struct TokenVault {
-        Vault tokenAsset;
+        Vault totalAsset;
         Vault totalBorrow;
         VaultInfo vaultInfo;
     }

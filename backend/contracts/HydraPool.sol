@@ -23,7 +23,7 @@ contract HydraPool is Pausing, NFTPledging {
     mapping(address => mapping(address => mapping(uint256 => Structs.LiquidatedWarning)))
         private nftLiquidationWarning;
 
-    error TooHighSlipage();
+    error TooHighSlipage(uint256 sharesOutOrAmountIn);
     error InsufficientBalance();
     error BelowHealthFactor();
     error BorrowerIsSolvant();
@@ -69,7 +69,7 @@ contract HydraPool is Pausing, NFTPledging {
         uint256[] fees,
         bytes data
     );
-    event DepositNFT(address user, address nftAddress, tokenId);
+    event DepositNFT(address user, address nftAddress, uint256 tokenId);
     event WithdrawNFT(
         address user,
         address recipient,
@@ -97,14 +97,14 @@ contract HydraPool is Pausing, NFTPledging {
     );
     event NewVaultSetup(
         address token,
-        Structs.VaultSetupParams param
+        Structs.VaultSetupParamemters params
     );
 
     //Make a subnet that create a token, then replace daiAddress with token address and everything
     constructor(
         address daiAddress,
         address daiPriceFeed,
-        Structs.VaultSetupParams memory daiVaultParams
+        Structs.VaultSetupParamemters memory daiVaultParams
     ) {
         _setupVault(
             daiAddress,
@@ -127,7 +127,7 @@ contract HydraPool is Pausing, NFTPledging {
         _accuredInterest(token);
 
         token.transferERC20(msg.sender, address(this),amount);
-        uint256 shares = vaults[token].Asset.toShares(amount, false);
+        uint256 shares = vaults[token].totalAsset.toShares(amount, false);
         if (shares < minSharesOut) revert TooHighSlipage(shares);
 
         vaults[token].totalAsset.shares += uint128(shares);
@@ -184,7 +184,7 @@ contract HydraPool is Pausing, NFTPledging {
     function redeem(
         address token,
         uint256 shares,
-        uint256 minAmoutOut
+        uint256 minAmountOut
     ) external {
         _withdraw(token, shares, minAmountOut, true);
     }
@@ -199,7 +199,7 @@ contract HydraPool is Pausing, NFTPledging {
         uint256 accountHealth = healthFactor(account);
         if (accountHealth >= MIN_HEALTH_FACTOR) revert BorrowerIsSolvant();
 
-        uint256 collateralShares = userShares[account][colllateral].collateral;
+        uint256 collateralShares = userShares[account][collateral].collateral;
         uint256 borrowShares = userShares[account][userBorrowToken].borrow;
         if (collateralShares == 0 || borrowShares == 0) return;
         {
@@ -209,7 +209,7 @@ contract HydraPool is Pausing, NFTPledging {
 
             uint256 maxBorrowAmountToLiquidate = accountHealth >=
                 FULL_LIQUIDATION_THRESHOLD
-                ? (totalBorrowAmount * DEFAULT_LIQUIDATION_CLOSE_FACTOR) / BPS
+                ? (totalBorrowAmount * DEFAULT_LIQUIDATION_CLOSE) / BPS
                 : totalBorrowAmount;
             amountToLiquidate = amountToLiquidate > maxBorrowAmountToLiquidate
                 ? maxBorrowAmountToLiquidate
@@ -224,7 +224,7 @@ contract HydraPool is Pausing, NFTPledging {
             address collateralToken = collateral;
             uint256 liquidationAmount = amountToLiquidate;
 
-            uint256 _userTotalCollateralAmount = vaults[collToken]
+            uint256 _userTotalCollateralAmount = vaults[collateralToken]
                 .totalAsset
                 .toAmount(collateralShares, false);
             
@@ -317,8 +317,8 @@ contract HydraPool is Pausing, NFTPledging {
         FlashLoanReceiverInterface receiver = FlashLoanReceiverInterface(receiverAddress);
         uint256[] memory fees = new uint256[](tokens.length);
         for (uint256 i; i < tokens.length; ) {
-            if (maxFlashloan(tokens[i]) == 0) revert FlashloanPaused(token[i]);
-            fees[i] = flashFee(token[i], amounts[i]);
+            if (maxFlashloan(tokens[i]) == 0) revert FlashloanPaused(tokens[i]);
+            fees[i] = flashloanFee(tokens[i], amounts[i]);
             tokens[i].transferERC20(address(this), receiverAddress, amounts[i]);
             unchecked {
                 ++i;
@@ -335,12 +335,12 @@ contract HydraPool is Pausing, NFTPledging {
         uint256 amountPlusFee;
         for (uint256 i; i < tokens.length; ) {
             amountPlusFee = amounts[i] + fees[i];
-            token[i].transferERC20(
+            tokens[i].transferERC20(
                 receiverAddress,
                 address(this),
                 amountPlusFee
             );
-            vaults[token[i]].totalAsset.amount += uint128(fee[i]);
+            vaults[tokens[i]].totalAsset.amount += uint128(fees[i]);
             unchecked {
                 ++i;
             }
@@ -372,7 +372,7 @@ contract HydraPool is Pausing, NFTPledging {
         address nftAddress,
         uint256 tokenId
     ) external {
-        _withdrawNFT(msg.sender, recipient, nftAddress, tokenId);
+        _withdrawNft(msg.sender, recipient, nftAddress, tokenId);
         if (healthFactor(msg.sender) < MIN_HEALTH_FACTOR) revert BelowHealthFactor();
         emit WithdrawNFT(msg.sender, recipient, nftAddress, tokenId);
     }
@@ -398,7 +398,7 @@ contract HydraPool is Pausing, NFTPledging {
         warning.liquidator = msg.sender;
         warning.liquidationTimestamp = uint64(block.timestamp + NFT_WARNING_DELAY);
 
-        emit LiquidatedWarning(msg.sender, account, nftAddress, tokenId);
+        emit LiquidatingNFTWarning(msg.sender, account, nftAddress, tokenId);
     }
 
     function stopNFTLiquidation(
@@ -409,7 +409,7 @@ contract HydraPool is Pausing, NFTPledging {
         if (healthFactor(account) < MIN_HEALTH_FACTOR)
             revert BelowHealthFactor();
         delete nftLiquidationWarning[account][nftAddress][tokenId];
-        emit LiquidateNFTStopped(account, nftAddress, tokenId);
+        emit LiquidatingNFTStopped(account, nftAddress, tokenId);
     }
 
     function executeNFTLiquidation(
@@ -435,7 +435,7 @@ contract HydraPool is Pausing, NFTPledging {
                 token = repayTokens[i];
                 amount = repayAmounts[i];
                 _accuredInterest(token);
-                borrowShares = vaults[token].totalBorrow.toShares(amout, true);
+                borrowShares = vaults[token].totalBorrow.toShares(amount, true);
                 token.transferERC20(msg.sender, address(this), amount);
                 vaults[token].totalBorrow.shares -= uint128(borrowShares);
                 vaults[token].totalBorrow.amount -= uint128(amount);
@@ -452,7 +452,7 @@ contract HydraPool is Pausing, NFTPledging {
             if (
                 totalDebtValue > nftFloorPrice &&
                 totalRepaidDebtValue <
-                (nftFloorPrice * DEFAULT_LIQUIDATION_CLOSE_FACTOR) / BPS
+                (nftFloorPrice * DEFAULT_LIQUIDATION_CLOSE) / BPS
             ) revert MustPayMoreDebt();
         }
 
@@ -475,7 +475,7 @@ contract HydraPool is Pausing, NFTPledging {
             userShares[borrower][DAI].collateral += shares;
         }
 
-        _withdrawNFT(account, msg.sender, nftAddres, tokenId);
+        _withdrawNft(account, msg.sender, nftAddress, tokenId);
 
         emit NFTLiquidated(
             msg.sender,
@@ -493,8 +493,8 @@ contract HydraPool is Pausing, NFTPledging {
         uint256 tokenId
     ) public view {
         if (healthFactor(account) < MIN_HEALTH_FACTOR)
-             revert BelowIsSolvant();
-        Structs.LiquidateWarn storage warning = nftLiquidationWarning[
+             revert BorrowerIsSolvant();
+        Structs.LiquidatedWarning storage warning = nftLiquidationWarning[
             account
         ][nftAddress][tokenId];
         if (warning.liquidator == address(0)) revert NoLiquidationWarning();
@@ -521,8 +521,8 @@ contract HydraPool is Pausing, NFTPledging {
     )
     {
         totalTokenCollateral = getUserTotalTokenCollateral(user);
-        totalNFTCollateral = getUserTotalNFTCollateral(user);
-        totalBorrowValue = getUserTotalBorrowValue(user);
+        totalNFTCollateral = getUserNFTCollateral(user);
+        totalBorrowValue = getUserTotalBorrow(user);
     }
 
     function getUserTotalTokenCollateral(
@@ -536,7 +536,7 @@ contract HydraPool is Pausing, NFTPledging {
                 false
             );
             if (tokenAmount != 0) {
-                totalVauleInUSD += getAmountInUSD(token, tokenAmount);
+                totalValueInUSD += getAmountInUSD(token, tokenAmount);
             }
             unchecked {
                 ++i;
@@ -544,10 +544,10 @@ contract HydraPool is Pausing, NFTPledging {
         } 
     }
 
-    function getUserNFTColatteralValue(address user) public view returns(uint256 totalValueInUSD) {
+    function getUserNFTCollateral(address user) public view returns(uint256 totalValueInUSD) {
         uint len = supportedNFTs.length;
         for (uint256 i; i < len;) {
-            address token = supportedNFTs[i];
+            address nftAddress = supportedNFTs[i];
             uint256 userDepositedNFTs = getDepositedNFTCount(user, nftAddress);
             if (userDepositedNFTs != 0) {
                 uint256 nftFloorPrice = getTokenPrice(nftAddress);
@@ -657,7 +657,7 @@ contract HydraPool is Pausing, NFTPledging {
 
     function maxFlashloan(
         address token
-    ) public view returns (uint256 maxFlashloamAmount) {
+    ) public view returns (uint256 maxFlashloanAmount) {
         maxFlashloanAmount = pausedStatus(token) ? 0 : type(uint256).max;
     }
 
@@ -665,7 +665,7 @@ contract HydraPool is Pausing, NFTPledging {
         address token,
         uint256 amount
     ) public view returns (uint256) {
-        return (amount * vaults[token].VaultInfo.flashFeeRate) / BPS;
+        return (amount * vaults[token].vaultInfo.flashFeeRate) / BPS;
     }
 
     /*///////////////////////////////////////////////
@@ -676,7 +676,7 @@ contract HydraPool is Pausing, NFTPledging {
         address token,
         address priceFeed,
         Structs.TokenType tokenType,
-        Structs.VaultSetupParams memory params,
+        Structs.VaultSetupParamemters memory params,
         bool addToken
     ) external onlyOwner {
         _setupVault(token, priceFeed, tokenType, params, addToken);
@@ -693,9 +693,9 @@ contract HydraPool is Pausing, NFTPledging {
         uint256 pulledAmount
     ) internal view returns (bool isAboveReserveRatio) {
         uint256 minVaultReserve = (vaults[token].totalAsset.amount *
-            vaults[token].VaultInfo.reserveRatio) / BPS;
+            vaults[token].vaultInfo.reserveRatio) / BPS;
         isAboveReserveRatio =
-            vault[token].totalAsset.amount != 0 &&
+            vaults[token].totalAsset.amount != 0 &&
             IERC20(token).balanceOf(address(this)) >= 
             minVaultReserve + pulledAmount;
     }
@@ -767,8 +767,8 @@ contract HydraPool is Pausing, NFTPledging {
         } else {
             uint256 _deltaTime = block.number - _currentRateInfo.lastBlock;
             uint256 _utilization = (_vault.totalBorrow.amount * PRECISION) /
-                _vaults.totalAsset.amount;
-            uint256 _newRate = _currentRateInfo.calculateInterestRate(
+                _vault.totalAsset.amount;
+            uint256 _newRate = _currentRateInfo.getInterestRate(
                 _utilization
             );
             _currentRateInfo.ratePerSec = uint64(newRate);
@@ -792,10 +792,10 @@ contract HydraPool is Pausing, NFTPledging {
                 _feesAmount =
                     (_interestEarned * _currentRateInfo.feeToProtocolRate) /
                     BPS;
-                _feeShare =
-                    (_feesAmount * _vault.totalAssets.shares) /
-                    (_vault.totalAssets.amount - _feesAmount);
-                _vault.totalAssets.shares += uint128(_feeShare);
+                _feesShare =
+                    (_feesAmount * _vault.totalAsset.shares) /
+                    (_vault.totalAsset.amount - _feesAmount);
+                _vault.totalAsset.shares += uint128(_feesShare);
 
                 // accure protocol fee shares to this contract
                 userShares[address(this)][token].collateral += _feesShare;
@@ -804,7 +804,7 @@ contract HydraPool is Pausing, NFTPledging {
                 _currentRateInfo.ratePerSec,
                 _interestEarned,
                 _feesAmount,
-                _feeShare
+                _feesShare
             );
         }
         //Save to storage 
@@ -815,7 +815,7 @@ contract HydraPool is Pausing, NFTPledging {
         address token,
         address priceFeed,
         Structs.TokenType tokenType,
-        Structs.VaultSetupParams memory params,
+        Structs.VaultSetupParamemters memory params,
         bool addToken
     ) internal {
         if (addToken) {
@@ -830,7 +830,7 @@ contract HydraPool is Pausing, NFTPledging {
             if (params.feeToProtocolRate > MAX_PROTOCOL_FEE)
                 revert InvalidFeeRate(params.feeToProtocolRate);
             if(params.flashFeeRate > MAX_PROTOCOL_FEE)
-                revert InvalidFeeRate(param.flashFeeRate);
+                revert InvalidFeeRate(params.flashFeeRate);
             Structs.VaultInfo storage _vaultInfo = vaults[token].vaultInfo;
             _vaultInfo.reserveRatio = params.reserveRatio;
             _vaultInfo.feeToProtocolRate = params.feeToProtocolRate;

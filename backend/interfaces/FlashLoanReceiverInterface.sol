@@ -11,7 +11,7 @@ interface FlashLoanReceiverInterface {
      * @param data user-defined parameters
      * @return bool success or not
      */
-    function flashLoan(
+    function onFlashLoan(
         address initiator,
         address[] calldata token,
         uint256[] calldata amounts,
