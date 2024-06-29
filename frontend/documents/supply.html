@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles/tailwind.css" />
+    <link rel="stylesheet" href="../styles/custom.css" />
+    <script src="../scripts/script2.js" type="module"></script>
+    <title>HydraLend</title>
+  </head>
+  <body>
+    <nav class="flex justify-between gap-4 center-item bg-blue-100 text-2xl">
+      <div id="logo" class="flex gap-4">
+        <a href="#">
+          <img src="../img/apple-touch-icon.png" alt="Logo" width="30px" height="30px" />
+        </a>
+        Hydra
+      </div>
+      <div id="dropdown">
+        <button id="dropbtn">
+          Borrow
+          <i class="fas fa-angle-down" aria-hidden="false"></i>
+        </button>
+        <div id="dropdown-content">
+          <a href="#">ERC20</a>
+          <a href="#">ERC721</a>
+        </div>
+      </div>
+      <a href="#">Supply</a>
+      <a href="#">Auction</a>
+      <div id="account" class="flex flex-col justify-start align-top">
+        <button id="accountBtn" class="text-base">Connect</button>
+        <button id="addrBtn" class="text-xs">_</button>
+      </div>
+    </nav>
+
+    <section id="content-container" class="bg-red-100 h-xl justify-center center-item">
+      <div id="title" class="block m-auto text-center text-3xl m-5">TitleText</div>
+      <div id="transac-container" class="grid grid-rows-12 grid-cols-12 bg-yellow-100 w-1/2 m-auto text-xl gap-1 p-3 rounded-xl pt-6">
+        <!-- input label -->
+        <div class="col-span-2 row-span-3 flex justify-center items-center">
+          <label for="amount" class="">Amount: </label>
+        </div>
+        <!-- input -->
+        <div class="col-span-8 row-span-3 flex items-center">
+          <input type="text" id="amount" class="rounded-md h-3/5 w-full p-3" placeholder="0.0" />
+        </div>
+        <!-- select unit -->
+        <div class="col-span-2 row-span-3 flex justify-center items-center">
+          <select name="unit" id="unit" class="h-3/5 w-4/5 pl-3 rounded-md cursor-pointer">
+            <option value="ethers">ETH</option>
+            <option value="avax">AVAX</option>
+          </select>
+        </div>
+        <!-- changes info here when changin between supply and borrow -->
+        <div id="#side-info" class="max-h-1/6 bg-pink-100 grid grid-cols-4 grid-rows-2 col-start-2 col-end-12 row-span-6">
+          <div id="side-info-1-tt" class="flex justify-center items-center">side info 1 tt</div>
+          <div id="side-info-1" class="flex justify-center items-center">side info 1</div>
+          <div id="side-info-2-tt" class="flex justify-center items-center">side info 2 tt</div>
+          <div id="side-info-2" class="flex justify-center items-center">side info 2</div>
+          <div id="side-info-3-tt" class="flex justify-center items-center">side info 3 tt</div>
+          <div id="side-info-3" class="flex justify-center items-center">side info 3</div>
+          <div id="side-info-4-tt" class="flex justify-center items-center">side info 4 tt</div>
+          <div id="side-info-5" class="flex justify-center items-center">side info 4</div>
+        </div>
+        <!-- Supply APY -->
+        <!-- Distribution APY -->
+        <div class="flex col-span-12 justify-center items-center row-span-2">
+          <button class="border-8 border-blue-500">Confirm</button>
+        </div>
+      </div>
+    </section>
+
+    <script type="text/javascript" src="../scripts/script.js"></script>
+  </body>
+</html>

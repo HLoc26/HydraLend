@@ -1,0 +1,30 @@
+nav a:hover,
+#dropdown:hover {
+  background-color: blue;
+}
+
+#dropdown-content {
+  display: none;
+  position: absolute;
+  margin: 1rem -1rem;
+  background-color: yellowgreen;
+  border-radius: 0px 0px 10px 10px;
+}
+
+#dropdown-content a {
+  display: block;
+  padding: 0.5em 1em;
+}
+
+#dropdown:hover #dropdown-content {
+  display: block;
+  border-radius: 0px 0px 10px 10px;
+}
+
+#content-container {
+  overflow: hidden;
+}
+
+nav > * {
+  padding: 1rem;
+}
