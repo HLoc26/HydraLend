@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/cryaboutit/HydraLend/backend/contracts/HydraPool.sol": {
-      "lastModificationDate": 1719682306420,
-      "contentHash": "0e46f01da33b788a880f1f4931aa9fd3",
+      "lastModificationDate": 1719683447340,
+      "contentHash": "d73da04e9795b54968eba4c2412371dc",
       "sourceName": "contracts/HydraPool.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -31,14 +31,14 @@
       },
       "imports": [
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        "../libraries/Helper.sol",
-        "../libraries/VaultAccounting.sol",
-        "../libraries/InterestRate.sol",
-        "../utils/Pausing.sol",
-        "../interfaces/Structs.sol",
-        "../interfaces/FlashLoanReceiverInterface.sol",
+        "./libraries/Helper.sol",
+        "./libraries/VaultAccounting.sol",
+        "./libraries/InterestRate.sol",
+        "./utils/Pausing.sol",
+        "./interfaces/Structs.sol",
+        "./interfaces/FlashLoanReceiverInterface.sol",
         "./NFTPledging.sol",
-        "../libraries/Helper.sol"
+        "./libraries/Helper.sol"
       ],
       "versionPragmas": [
         "^0.8.18"
@@ -48,8 +48,8 @@
       ]
     },
     "/home/cryaboutit/HydraLend/backend/contracts/NFTPledging.sol": {
-      "lastModificationDate": 1719656815007,
-      "contentHash": "7a3834635c5670218dc2bf07cec04b90",
+      "lastModificationDate": 1719683533390,
+      "contentHash": "e9a7146a15d84d4ed3e66384021dcec4",
       "sourceName": "contracts/NFTPledging.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -80,237 +80,13 @@
         "@openzeppelin/contracts/token/ERC721/IERC721.sol",
         "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
         "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
-        "../interfaces/Structs.sol"
+        "./interfaces/Structs.sol"
       ],
       "versionPragmas": [
         "^0.8.18"
       ],
       "artifacts": [
         "NFTPledging"
-      ]
-    },
-    "/home/cryaboutit/HydraLend/backend/libraries/Helper.sol": {
-      "lastModificationDate": 1719645019936,
-      "contentHash": "da0d3ce9b75a70da909f9dd499ec3602",
-      "sourceName": "libraries/Helper.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.18"
-      ],
-      "artifacts": [
-        "Helper"
-      ]
-    },
-    "/home/cryaboutit/HydraLend/backend/libraries/InterestRate.sol": {
-      "lastModificationDate": 1719644632396,
-      "contentHash": "77a1200da40c962fa5ef6854ed224561",
-      "sourceName": "libraries/InterestRate.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/Structs.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.18"
-      ],
-      "artifacts": [
-        "InterestRate"
-      ]
-    },
-    "/home/cryaboutit/HydraLend/backend/libraries/VaultAccounting.sol": {
-      "lastModificationDate": 1719645454816,
-      "contentHash": "9ee0abbf8c1a5674ee4fea4f8042dadf",
-      "sourceName": "libraries/VaultAccounting.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/Structs.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.18"
-      ],
-      "artifacts": [
-        "VaultAccounting"
-      ]
-    },
-    "/home/cryaboutit/HydraLend/backend/interfaces/Structs.sol": {
-      "lastModificationDate": 1719682002700,
-      "contentHash": "e8607a797c4b052f999e4c61e5551181",
-      "sourceName": "interfaces/Structs.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.18"
-      ],
-      "artifacts": [
-        "Structs"
-      ]
-    },
-    "/home/cryaboutit/HydraLend/backend/utils/Pausing.sol": {
-      "lastModificationDate": 1719656579397,
-      "contentHash": "cae100da47211408242fb5a38eab710c",
-      "sourceName": "utils/Pausing.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.18"
-      ],
-      "artifacts": [
-        "Pausing"
-      ]
-    },
-    "/home/cryaboutit/HydraLend/backend/interfaces/FlashLoanReceiverInterface.sol": {
-      "lastModificationDate": 1719682115920,
-      "contentHash": "cbfc617efd1f398dbe53cbf453381505",
-      "sourceName": "interfaces/FlashLoanReceiverInterface.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.18"
-      ],
-      "artifacts": [
-        "FlashLoanReceiverInterface"
       ]
     },
     "/home/cryaboutit/HydraLend/backend/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
@@ -358,8 +134,8 @@
       ]
     },
     "/home/cryaboutit/HydraLend/backend/contracts/TokenSupporter.sol": {
-      "lastModificationDate": 1719656472727,
-      "contentHash": "2f374284f556df3e74abacf5a49682ac",
+      "lastModificationDate": 1719683542420,
+      "contentHash": "c1dd359e988c34e2f541e0ef2548470e",
       "sourceName": "contracts/TokenSupporter.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -387,9 +163,9 @@
       },
       "imports": [
         "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol",
-        "../libraries/ChainlinkOracle.sol",
-        "../interfaces/Structs.sol",
-        "../utils/Constants.sol"
+        "./libraries/ChainlinkOracle.sol",
+        "./interfaces/Structs.sol",
+        "./utils/Constants.sol"
       ],
       "versionPragmas": [
         "^0.8.18"
@@ -506,80 +282,6 @@
       ],
       "artifacts": [
         "EnumerableSet"
-      ]
-    },
-    "/home/cryaboutit/HydraLend/backend/libraries/ChainlinkOracle.sol": {
-      "lastModificationDate": 1719680870641,
-      "contentHash": "f6f5d2d97a56145c1f2c3ce486303a8f",
-      "sourceName": "libraries/ChainlinkOracle.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.18"
-      ],
-      "artifacts": [
-        "ChainlinkOracle"
-      ]
-    },
-    "/home/cryaboutit/HydraLend/backend/utils/Constants.sol": {
-      "lastModificationDate": 1719673124706,
-      "contentHash": "415b18f36b9024d705d5cfca3b01f849",
-      "sourceName": "utils/Constants.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.18"
-      ],
-      "artifacts": [
-        "Constants"
       ]
     },
     "/home/cryaboutit/HydraLend/backend/node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol": {
@@ -1025,6 +727,611 @@
       ],
       "artifacts": [
         "SignedMath"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/libraries/Helper.sol": {
+      "lastModificationDate": 1719645019936,
+      "contentHash": "da0d3ce9b75a70da909f9dd499ec3602",
+      "sourceName": "contracts/libraries/Helper.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "Helper"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/libraries/VaultAccounting.sol": {
+      "lastModificationDate": 1719645454816,
+      "contentHash": "9ee0abbf8c1a5674ee4fea4f8042dadf",
+      "sourceName": "contracts/libraries/VaultAccounting.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/Structs.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "VaultAccounting"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/libraries/InterestRate.sol": {
+      "lastModificationDate": 1719644632396,
+      "contentHash": "77a1200da40c962fa5ef6854ed224561",
+      "sourceName": "contracts/libraries/InterestRate.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/Structs.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "InterestRate"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/utils/Pausing.sol": {
+      "lastModificationDate": 1719656579397,
+      "contentHash": "cae100da47211408242fb5a38eab710c",
+      "sourceName": "contracts/utils/Pausing.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "Pausing"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/interfaces/Structs.sol": {
+      "lastModificationDate": 1719682002700,
+      "contentHash": "e8607a797c4b052f999e4c61e5551181",
+      "sourceName": "contracts/interfaces/Structs.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "Structs"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/interfaces/FlashLoanReceiverInterface.sol": {
+      "lastModificationDate": 1719682115920,
+      "contentHash": "cbfc617efd1f398dbe53cbf453381505",
+      "sourceName": "contracts/interfaces/FlashLoanReceiverInterface.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "FlashLoanReceiverInterface"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/libraries/ChainlinkOracle.sol": {
+      "lastModificationDate": 1719680870641,
+      "contentHash": "f6f5d2d97a56145c1f2c3ce486303a8f",
+      "sourceName": "contracts/libraries/ChainlinkOracle.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "ChainlinkOracle"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/utils/Constants.sol": {
+      "lastModificationDate": 1719673124706,
+      "contentHash": "415b18f36b9024d705d5cfca3b01f849",
+      "sourceName": "contracts/utils/Constants.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "Constants"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorV2V3Interface.sol": {
+      "lastModificationDate": 1719680738111,
+      "contentHash": "8634be6a1c8b65b4c0bfd6d1fa765e72",
+      "sourceName": "@chainlink/contracts/src/v0.8/interfaces/AggregatorV2V3Interface.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./AggregatorInterface.sol",
+        "./AggregatorV3Interface.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AggregatorV2V3Interface"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/node_modules/@chainlink/contracts/src/v0.8/interfaces/AggregatorInterface.sol": {
+      "lastModificationDate": 1719680764981,
+      "contentHash": "f00f7f6071813249ee968d1114635a81",
+      "sourceName": "@chainlink/contracts/src/v0.8/interfaces/AggregatorInterface.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AggregatorInterface"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/mocks/MockV3Aggregator.sol": {
+      "lastModificationDate": 1719682614730,
+      "contentHash": "125794be4ef48fab962560d96afd6cff",
+      "sourceName": "contracts/mocks/MockV3Aggregator.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@chainlink/contracts/src/v0.8/interfaces/AggregatorV2V3Interface.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "MockV3Aggregator"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+      "lastModificationDate": 1719657912437,
+      "contentHash": "c6375ef25e84c90b3d15f9ec4eef218f",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC20.sol",
+        "./extensions/IERC20Metadata.sol",
+        "../../utils/Context.sol",
+        "../../interfaces/draft-IERC6093.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ERC20"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/mocks/IERC20Mock.sol": {
+      "lastModificationDate": 1719682592030,
+      "contentHash": "2ae118ced4001f7a6b43dfc7857b037b",
+      "sourceName": "contracts/mocks/IERC20Mock.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "IERC20Mock"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/mocks/FlashloanReceiverMock.sol": {
+      "lastModificationDate": 1719682502520,
+      "contentHash": "8eb3ab285cccada9e9528b1da9b85b7a",
+      "sourceName": "contracts/mocks/FlashloanReceiverMock.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "BadFlashloanReceiverMock",
+        "FlashloanReceiverMock"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/mocks/DecimalsMock.sol": {
+      "lastModificationDate": 1719682411480,
+      "contentHash": "3a778dcfaf89e05b88a3bbab810a3e53",
+      "sourceName": "contracts/mocks/DecimalsMock.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC20DecimalsMock"
+      ]
+    },
+    "/home/cryaboutit/HydraLend/backend/contracts/mocks/ERC721Mock.sol": {
+      "lastModificationDate": 1719682431950,
+      "contentHash": "88116f152059b5f0faccb5c180ec7d1f",
+      "sourceName": "contracts/mocks/ERC721Mock.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC721Mock"
       ]
     }
   }
