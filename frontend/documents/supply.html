@@ -5,12 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../styles/tailwind.css" />
     <link rel="stylesheet" href="../styles/custom.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <script type="module" src="../scripts/ethers-5.1.esm.min.js"></script>
 
     <title>HydraLend</title>
   </head>
-  <body>
-    <nav class="flex justify-between gap-4 center-item bg-blue-100 text-2xl">
+  <body class="h-screen">
+    <nav class="flex justify-between gap-4 center-item text-2xl">
       <div id="logo" class="flex gap-4">
         <a href="#">
           <img src="../img/apple-touch-icon.png" alt="Logo" width="30px" height="30px" />
@@ -20,11 +25,11 @@
       <div id="dropdown">
         <button id="dropbtn">
           Borrow
-          <i class="fas fa-angle-down" aria-hidden="false"></i>
+          <i class="fas fa-angle-down" aria-hidden="true" style="font-style: italic"></i>
         </button>
         <div id="dropdown-content">
-          <a href="#" id="erc20">ERC20</a>
-          <a href="#" id="erc721">ERC721</a>
+          <a href="#" id="erc20">Pledge ERC20s</a>
+          <a href="#" id="erc721">Pledge NFTs</a>
         </div>
       </div>
       <a href="#" id="supply">Supply</a>
@@ -35,45 +40,159 @@
       </div>
     </nav>
 
-    <section id="content-container" class="bg-red-100 h-xl justify-center center-item">
-      <div id="title" class="block m-10 text-center text-5xl">Supply ERC20</div>
-      <div id="transac-container" class="grid grid-rows-12 grid-cols-12 bg-yellow-100 w-1/2 m-auto text-xl gap-1 p-3 rounded-xl pt-6">
+    <section id="content-container" class="h-xl justify-center center-item">
+      <div id="background"></div>
+      <div id="title" class="block m-10 text-center text-5xl">Supply ERC20s</div>
+      <!-- ============================================================================================================== -->
+      <!-- =================================================== SUPPLY =================================================== -->
+      <!-- ============================================================================================================== -->
+      <div id="supply-container" class="grid grid-rows-12 grid-cols-12 w-1/2 m-auto text-xl gap-1 p-3 rounded-xl pt-6 border-white">
         <!-- input label -->
         <div class="col-span-2 row-start-2 row-span-2 flex justify-center items-center">
           <label for="amount" class="">Amount: </label>
         </div>
         <!-- input -->
         <div class="col-span-8 row-span-3 flex items-end">
-          <input type="text" id="amount" class="rounded-md h-3/5 w-full p-3" placeholder="0.0" />
+          <input type="text" id="amount" class="rounded-md h-3/5 w-full p-3 bg-black" placeholder="0.0" />
         </div>
         <!-- select unit -->
         <div class="col-span-2 row-span-3 flex justify-center items-end">
-          <select name="unit" id="unit" class="h-3/5 w-4/5 pl-3 rounded-md cursor-pointer">
-            <option value="ether" default>ETH</option>
-            <option value="avax">AVAX</option>
+          <select name="unit" id="supply-unit" class="unit h-3/5 w-4/5 pl-3 rounded-md cursor-pointer bg-black text-white">
+            <option value="avax" selected>AVAX</option>
+            <option value="ether">ETH</option>
           </select>
         </div>
         <!-- balance -->
-        <div class="col-span-12 row-span-1 pl-32 text-xs flex items-top gap-0.5">
+        <div class="col-start-3 col-end-12 row-span-1 text-md flex items-top gap-0.5">
           <span>Balance: </span>
-          <span id="balance"></span>
-          <span id="selected-unit"></span>
+          <span id="supply-balance"></span>
+          <span id="supply-selected-unit"></span>
         </div>
         <!-- changes info here when changin between supply and borrow -->
-        <div id="#side-info" class="max-h-1/6 bg-pink-100 grid grid-cols-4 grid-rows-2 col-start-2 col-end-12 row-span-6">
-          <div id="side-info-1-tt" class="flex justify-center items-center">side info 1 tt</div>
-          <div id="side-info-1" class="flex justify-center items-center">side info 1</div>
-          <div id="side-info-2-tt" class="flex justify-center items-center">side info 2 tt</div>
-          <div id="side-info-2" class="flex justify-center items-center">side info 2</div>
-          <div id="side-info-3-tt" class="flex justify-center items-center">side info 3 tt</div>
-          <div id="side-info-3" class="flex justify-center items-center">side info 3</div>
-          <div id="side-info-4-tt" class="flex justify-center items-center">side info 4 tt</div>
-          <div id="side-info-5" class="flex justify-center items-center">side info 4</div>
+        <div id="side-info" class="h-full grid grid-cols-4 grid-rows-2 gap-x-10 gap-y-5 col-start-2 col-end-12 row-span-4 rounded-md p-5">
+          <div id="side-info-1-tt" class="flex justify-start items-center">Supply APY</div>
+          <div id="side-info-1" class="flex justify-end items-center">0.00%</div>
+          <div id="side-info-2-tt" class="flex justify-start items-center">Colateral factor</div>
+          <div id="side-info-2" class="flex justify-end items-center">0.00%</div>
+          <div id="side-info-3-tt" class="flex justify-start items-center">Distribution APY</div>
+          <div id="side-info-3" class="flex justify-end items-center">0.00%</div>
+          <div id="side-info-4-tt" class="flex justify-start items-center"></div>
+          <div id="side-info-5" class="flex justify-end items-center"></div>
         </div>
         <!-- Supply APY -->
         <!-- Distribution APY -->
-        <div class="flex col-span-12 justify-center items-center row-span-2">
-          <button class="border-8 border-blue-500">Confirm</button>
+        <div class="flex col-span-12 justify-center items-center row-start-10 row-end-12">
+          <button class="bg-sky-900 p-2 rounded-xl">Confirm</button>
+        </div>
+      </div>
+      <!-- ============================================================================================================== -->
+      <!-- =================================================== BORROW20 ================================================= -->
+      <!-- ============================================================================================================== -->
+      <div id="borrow20-container" class="grid grid-rows-12 grid-cols-12 w-3/5 m-auto text-xl gap-1 px-16 pt-10 rounded-xl border-white">
+        <!-- input pledge label -->
+        <div class="col-span-2 row-start-0 row-span-1 flex justify-start items-center">
+          <label for="amount" class="">Pledge amount </label>
+        </div>
+        <!-- input pledge -->
+        <div class="col-span-4 row-start-2 row-end-4 flex items-start">
+          <input type="text" id="amount" class="rounded-md h-full w-full p-3 bg-black" placeholder="0.0" />
+        </div>
+        <!-- select unit -->
+        <div class="col-span-1 row-start-2 row-end-4 flex justify-center items-start">
+          <select name="unit" id="borrow20-pledge-unit" class="unit h-full w-full pl-3 rounded-md cursor-pointer bg-black text-white">
+            <option value="avax" selected>AVAX</option>
+            <option value="ether">ETH</option>
+          </select>
+        </div>
+        <!-- icon -->
+        <div class="col-span-2 row-start-2 row-end-4 flex justify-center items-center"><i class="fa fa-chain" style="font-size: large"></i></div>
+        <!-- input borrow amount -->
+        <div class="col-span-4 row-start-2 row-end-4 flex items-start">
+          <input type="text" id="amount" class="rounded-md h-full w-full p-3 bg-black" placeholder="0.0" />
+        </div>
+        <!-- select unit -->
+        <div class="col-span-1 row-start-2 row-end-4 flex justify-center items-start">
+          <select name="unit" id="borrow20-unit" class="unit h-full w-full pl-3 rounded-md cursor-pointer bg-black text-white">
+            <option value="avax" selected>AVAX</option>
+            <option value="ether">ETH</option>
+          </select>
+        </div>
+        <!-- balance -->
+        <div class="col-span-12 row-span-1 text-md flex items-top gap-0.5">
+          <span>Balance: </span>
+          <span id="20-balance"></span>
+          <span id="20-selected-unit"></span>
+        </div>
+        <!-- changes info here when changin between supply and borrow -->
+        <div id="side-info" class="max-h-1/6 grid grid-cols-4 grid-rows-2 col-start-2 col-end-12 row-span-4 gap-x-20 p-5 rounded-md">
+          <div id="side-info-1-tt" class="flex justify-start items-center">Borrow APY</div>
+          <div id="side-info-1" class="flex justify-end items-center">0.00%</div>
+          <div id="side-info-2-tt" class="flex justify-start items-center">Pool limit</div>
+          <div id="side-info-2" class="flex justify-end items-center">0 AVAX</div>
+          <div id="side-info-3-tt" class="flex justify-start items-center">Distribution APY</div>
+          <div id="side-info-3" class="flex justify-end items-center">0.00%</div>
+          <div id="side-info-4-tt" class="flex justify-start items-center"></div>
+          <div id="side-info-5" class="flex justify-end items-center"></div>
+        </div>
+        <!-- Supply APY -->
+        <!-- Distribution APY -->
+        <div class="flex col-span-12 justify-center items-center row-start-10 row-end-12">
+          <button class="bg-sky-900 p-5 px-8 rounded-xl">Confirm</button>
+        </div>
+      </div>
+      <!-- ============================================================================================================== -->
+      <!-- ================================================== BORROW721 ================================================= -->
+      <!-- ============================================================================================================== -->
+      <div id="borrow721-container" class="grid grid-rows-12 grid-cols-12 w-3/5 m-auto text-xl gap-1 px-16 pt-10 rounded-xl border-white">
+        <!-- input pledge label -->
+        <div class="col-span-2 row-start-0 row-span-1 flex justify-start items-center">
+          <label for="amount" class="">Pledge amount </label>
+        </div>
+        <!-- input pledge -->
+        <div class="col-span-4 row-start-2 row-end-4 flex items-start">
+          <input type="text" id="amount" class="rounded-md h-full w-full p-3 bg-black" placeholder="0.0" />
+        </div>
+        <!-- select unit -->
+        <div class="col-span-1 row-start-2 row-end-4 flex justify-center items-start">
+          <select name="unit" id="borrow721-pledge-unit" class="unit h-full w-full pl-3 rounded-md cursor-pointer bg-black text-white">
+            <option value="avax" selected>AVAX</option>
+            <option value="ether">ETH</option>
+          </select>
+        </div>
+        <!-- icon -->
+        <div class="col-span-2 row-start-2 row-end-4 flex justify-center items-center"><i class="fa fa-chain" style="font-size: large"></i></div>
+        <!-- input borrow amount -->
+        <div class="col-span-4 row-start-2 row-end-4 flex items-start">
+          <input type="text" id="amount" class="rounded-md h-full w-full p-3 bg-black" placeholder="0.0" />
+        </div>
+        <!-- select unit -->
+        <div class="col-span-1 row-start-2 row-end-4 flex justify-center items-start">
+          <select name="unit" id="borrow721-unit" class="unit h-full w-full pl-3 rounded-md cursor-pointer bg-black text-white">
+            <option value="avax" selected>AVAX</option>
+            <option value="ether">ETH</option>
+          </select>
+        </div>
+        <!-- balance -->
+        <div class="col-span-12 row-span-1 text-md flex items-top gap-0.5">
+          <span>Balance: </span>
+          <span id="721-balance"></span>
+          <span id="721-selected-unit"></span>
+        </div>
+        <!-- changes info here when changin between supply and borrow -->
+        <div id="side-info" class="max-h-1/6 grid grid-cols-4 grid-rows-2 col-start-2 col-end-12 row-span-4 gap-x-20 p-5 rounded-md">
+          <div id="side-info-1-tt" class="flex justify-start items-center">Borrow APY</div>
+          <div id="side-info-1" class="flex justify-end items-center">0.00%</div>
+          <div id="side-info-2-tt" class="flex justify-start items-center">Pool limit</div>
+          <div id="side-info-2" class="flex justify-end items-center">0 AVAX</div>
+          <div id="side-info-3-tt" class="flex justify-start items-center">Distribution APY</div>
+          <div id="side-info-3" class="flex justify-end items-center">0.00%</div>
+          <div id="side-info-4-tt" class="flex justify-start items-center"></div>
+          <div id="side-info-5" class="flex justify-end items-center"></div>
+        </div>
+        <!-- Supply APY -->
+        <!-- Distribution APY -->
+        <div class="flex col-span-12 justify-center items-center row-start-10 row-end-12">
+          <button class="bg-sky-900 p-5 px-8 rounded-xl">Confirm</button>
         </div>
       </div>
     </section>
