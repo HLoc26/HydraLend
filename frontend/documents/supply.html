@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../styles/tailwind.css" />
     <link rel="stylesheet" href="../styles/custom.css" />
-    <script src="../scripts/script2.js" type="module"></script>
+    <script type="module" src="../scripts/ethers-5.1.esm.min.js"></script>
+
     <title>HydraLend</title>
   </head>
   <body>
@@ -22,11 +23,11 @@
           <i class="fas fa-angle-down" aria-hidden="false"></i>
         </button>
         <div id="dropdown-content">
-          <a href="#">ERC20</a>
-          <a href="#">ERC721</a>
+          <a href="#" id="erc20">ERC20</a>
+          <a href="#" id="erc721">ERC721</a>
         </div>
       </div>
-      <a href="#">Supply</a>
+      <a href="#" id="supply">Supply</a>
       <a href="#">Auction</a>
       <div id="account" class="flex flex-col justify-start align-top">
         <button id="accountBtn" class="text-base">Connect</button>
@@ -35,22 +36,28 @@
     </nav>
 
     <section id="content-container" class="bg-red-100 h-xl justify-center center-item">
-      <div id="title" class="block m-auto text-center text-3xl m-5">TitleText</div>
+      <div id="title" class="block m-10 text-center text-5xl">Supply ERC20</div>
       <div id="transac-container" class="grid grid-rows-12 grid-cols-12 bg-yellow-100 w-1/2 m-auto text-xl gap-1 p-3 rounded-xl pt-6">
         <!-- input label -->
-        <div class="col-span-2 row-span-3 flex justify-center items-center">
+        <div class="col-span-2 row-start-2 row-span-2 flex justify-center items-center">
           <label for="amount" class="">Amount: </label>
         </div>
         <!-- input -->
-        <div class="col-span-8 row-span-3 flex items-center">
+        <div class="col-span-8 row-span-3 flex items-end">
           <input type="text" id="amount" class="rounded-md h-3/5 w-full p-3" placeholder="0.0" />
         </div>
         <!-- select unit -->
-        <div class="col-span-2 row-span-3 flex justify-center items-center">
+        <div class="col-span-2 row-span-3 flex justify-center items-end">
           <select name="unit" id="unit" class="h-3/5 w-4/5 pl-3 rounded-md cursor-pointer">
-            <option value="ethers">ETH</option>
+            <option value="ether" default>ETH</option>
             <option value="avax">AVAX</option>
           </select>
+        </div>
+        <!-- balance -->
+        <div class="col-span-12 row-span-1 pl-32 text-xs flex items-top gap-0.5">
+          <span>Balance: </span>
+          <span id="balance"></span>
+          <span id="selected-unit"></span>
         </div>
         <!-- changes info here when changin between supply and borrow -->
         <div id="#side-info" class="max-h-1/6 bg-pink-100 grid grid-cols-4 grid-rows-2 col-start-2 col-end-12 row-span-6">
@@ -72,5 +79,6 @@
     </section>
 
     <script type="text/javascript" src="../scripts/script.js"></script>
+    <script type="module" src="../scripts/connect.js"></script>
   </body>
 </html>
