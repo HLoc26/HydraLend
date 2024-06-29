@@ -2,9 +2,9 @@
 pragma solidity ^0.8.18;
 
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-import "../libraries/ChainlinkOracle.sol";
-import "../interfaces/Structs.sol";
-import "../utils/Constants.sol";
+import "./libraries/ChainlinkOracle.sol";
+import "./interfaces/Structs.sol";
+import "./utils/Constants.sol";
 
 contract TokenSupporter is Constants {
     using ChainlinkOracle for AggregatorV3Interface;

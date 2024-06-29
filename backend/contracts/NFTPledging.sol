@@ -5,7 +5,7 @@ import {TokenSupporter} from "./TokenSupporter.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import "../interfaces/Structs.sol";
+import "./interfaces/Structs.sol";
 
 contract NFTPledging is TokenSupporter, IERC721Receiver {
     using EnumerableSet for EnumerableSet.UintSet;
