@@ -38,8 +38,8 @@ interface Structs {
         uint64 lastTimestamp;
         uint64 lastBlock;
         uint64 baseRate;
-        uint64 additionalParam1;
-        uint64 additionalParam2;
+        uint64 slope1;
+        uint64 slope2;
         uint256 optimalUtilization;
     }
 
@@ -53,8 +53,8 @@ interface Structs {
         uint64 feeToProtocolRate;
         uint64 flashFeeRate;
         uint64 baseRate;
-        uint64 additionalParam1;
-        uint64 additionalParam2;
+        uint64 slope1;
+        uint64 slope2;
         uint256 optimalUtilization;
     }
 }
