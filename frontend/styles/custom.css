@@ -1,24 +1,50 @@
 body {
-  background: rgb(2, 0, 36);
-  background: -moz-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(10, 10, 83, 1) 46%, rgba(68, 75, 134, 1) 100%);
-  background: -webkit-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(10, 10, 83, 1) 46%, rgba(68, 75, 134, 1) 100%);
-  background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(10, 10, 83, 1) 46%, rgba(68, 75, 134, 1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020024",endColorstr="#444b86",GradientType=1);
+  background-color: rgb(0, 0, 3);
   color: white;
   font-family: "Red Hat Display", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+  /* overflow: hidden; */
 }
+#content-container {
+  background: rgb(2, 0, 36);
+  background: -moz-linear-gradient(0deg, rgba(2, 0, 36, 1) 0%, rgba(10, 10, 83, 1) 85%, rgb(255, 255, 255) 100%);
+  background: -webkit-linear-gradient(0deg, rgba(2, 0, 36, 1) 0%, rgba(10, 10, 83, 1) 46%, rgb(255, 255, 255) 100%);
+  background: linear-gradient(0deg, rgba(2, 0, 36, 0.9) 0%, rgba(10, 10, 83, 0.9) 100%);
 
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020024",endColorstr="#444b86",GradientType=1);
+  height: 100%;
+}
 nav a:hover,
 #dropdown:hover {
   background-color: blue;
 }
+#dropdown #dropdown-content a:last-child:hover {
+  border-radius: 0px 0px 10px 10px;
+}
 
-#transac-container {
+#background {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-image: url("../img/bg.png");
+  background-size: 100vi 100vh;
+  background-blend-mode: lighten;
+  z-index: -10;
+}
+#supply-container,
+#borrow20-container,
+#borrow721-container {
+  border-color: #4dafff;
+  border-width: 1px;
   background-color: #202020;
   color: white;
+}
+
+#borrow20-container,
+#borrow721-container {
+  display: none;
 }
 
 #side-info {
@@ -27,14 +53,14 @@ nav a:hover,
 #dropdown-content {
   display: none;
   position: absolute;
-  margin: 1rem -1rem;
-  background-color: yellowgreen;
+  margin: 0.75em -5em;
+  background-color: rgb(50, 182, 205);
   border-radius: 0px 0px 10px 10px;
 }
 
 #dropdown-content a {
   display: block;
-  padding: 0.5em 1em;
+  padding: 0.45em 3.5em;
 }
 
 #dropdown:hover #dropdown-content {
@@ -48,7 +74,12 @@ nav a:hover,
 
 nav > * {
   padding: 1rem;
+  padding-left: 5em;
+  padding-right: 5em;
 }
 nav * {
   font-style: italic;
+}
+nav {
+  border-bottom: #4dafff 1px solid;
 }
