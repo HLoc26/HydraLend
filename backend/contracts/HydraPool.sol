@@ -115,6 +115,399 @@ contract HydraPool is Pausing, NFTPledging {
         );
     }
     /*/////////////////////////////////////////////
+                ERC20 FUNCTIONS
+    //////////////////////////////////////////////*/
+    function supply(
+        address token,
+        uint256 amount,
+        uint256 minSharesOut
+    ) external {
+        WhenNotPaused(token);
+        allowedToken(token);
+        _accuredInterest(token);
+
+        token.transferERC20(msg.sender, address(this),amount);
+        uint256 shares = vaults[token].Asset.toShares(amount, false);
+        if (shares < minSharesOut) revert TooHighSlipage(shares);
+
+        vaults[token].totalAsset.shares += uint128(shares);
+        vaults[token].totalAsset.amount += uint128(amount);
+        userShares[msg.sender][token].collateral += shares;
+
+        emit Deposit(msg.sender, token, amount, shares);
+    }
+
+    function borrow(address token, uint256 amount) external {
+        WhenNotPaused(token);
+        if(!vaultAboveReserveRatio(token,amount))
+            revert InsufficientBalance();
+        _accuredInterest(token);
+
+        uint256 shares = vaults[token].totalBorrow.toShares(amount, false);
+        vaults[token].totalBorrow.shares += uint128(shares);
+        vaults[token].totalBorrow.amount += uint128(amount);
+        userShares[msg.sender][token].borrow += shares;
+        
+        token.transferERC20(address(this), msg.sender, amount);
+        if(healthFactor(msg.sender) < MIN_HEALTH_FACTOR)
+            revert BelowHealthFactor();
+
+        emit Borrow(msg.sender, token, amount, shares);
+    }
+
+    function repay(address token, uint256 amount) external {
+        _accuredInterest(token);
+        uint256 userBorrowShare = userShares[msg.sender][token].borrow;
+        uint256 shares = vaults[token].totalBorrow.toShares(amount, true);
+        if (amount == type(uint256).max || shares > userBorrowShare) {
+            shares = userBorrowShare;
+            amount = vaults[token].totalBorrow.toAmount(shares, true);
+        }
+        token.transferERC20(msg.sender, address(this), amount);
+        unchecked {
+            vaults[token].totalBorrow.shares -= uint128(shares);
+            vaults[token].totalBorrow.amount -= uint128(amount);
+            userShares[msg.sender][token].borrow = userBorrowShare - shares;
+        }
+
+        emit Repay(msg.sender, token, amount, shares);
+    }
+
+    function withdraw(
+        address token,
+        uint256 amount,
+        uint256 maxShareIn
+    ) external {
+        _withdraw(token, amount, maxShareIn, false);
+    }
+
+    function redeem(
+        address token,
+        uint256 shares,
+        uint256 minAmoutOut
+    ) external {
+        _withdraw(token, shares, minAmountOut, true);
+    }
+
+    function liquidate(
+        address account,
+        address collateral,
+        address userBorrowToken,
+        uint256 amountToLiquidate
+    ) external {
+        if (msg.sender == account) revert SelfLiquidation();
+        uint256 accountHealth = healthFactor(account);
+        if (accountHealth >= MIN_HEALTH_FACTOR) revert BorrowerIsSolvant();
+
+        uint256 collateralShares = userShares[account][colllateral].collateral;
+        uint256 borrowShares = userShares[account][userBorrowToken].borrow;
+        if (collateralShares == 0 || borrowShares == 0) return;
+        {
+            uint256 totalBorrowAmount = vaults[userBorrowToken]
+                .totalBorrow
+                .toAmount(borrowShares, true);
+
+            uint256 maxBorrowAmountToLiquidate = accountHealth >=
+                FULL_LIQUIDATION_THRESHOLD
+                ? (totalBorrowAmount * DEFAULT_LIQUIDATION_CLOSE_FACTOR) / BPS
+                : totalBorrowAmount;
+            amountToLiquidate = amountToLiquidate > maxBorrowAmountToLiquidate
+                ? maxBorrowAmountToLiquidate
+                : amountToLiquidate;
+        } 
+
+        uint256 collateralAmountToLiquidate;
+        uint256 liquidationReward;
+        {
+            address user = account;
+            address borrowToken = userBorrowToken;
+            address collateralToken = collateral;
+            uint256 liquidationAmount = amountToLiquidate;
+
+            uint256 _userTotalCollateralAmount = vaults[collToken]
+                .totalAsset
+                .toAmount(collateralShares, false);
+            
+            uint256 collateralPrice = getTokenPrice(collateralToken);
+            uint256 borrowTokenPrice = getTokenPrice(borrowToken);
+            uint8 collateralDecimals = collateralToken.tokenDecimals();
+            uint8 borrowTokenDecimals = borrowToken.tokenDecimals();
+
+            collateralAmountToLiquidate =
+                (liquidationAmount *
+                    borrowTokenPrice *
+                    10 ** collateralDecimals) /
+                (collateralPrice * 10 ** borrowTokenDecimals);
+            uint256 maxLiquidationReward = (collateralAmountToLiquidate *
+                LIQUIDATION_REWARD) / BPS;
+            if (collateralAmountToLiquidate > _userTotalCollateralAmount) {
+                collateralAmountToLiquidate = _userTotalCollateralAmount;
+                liquidationReward = 
+                    ((_userTotalCollateralAmount *
+                        collateralPrice *
+                        10 ** borrowTokenDecimals) / borrowTokenPrice) *
+                    10 ** collateralDecimals;
+                amountToLiquidate = liquidationAmount;
+            } else {
+                uint256 collateralBalanceAfter = _userTotalCollateralAmount -
+                    collateralAmountToLiquidate;
+                liquidationReward = maxLiquidationReward >
+                    collateralBalanceAfter
+                    ? collateralBalanceAfter
+                    : maxLiquidationReward;
+            }
+            //Update borrow vault
+            uint128 repaidBorrowShares = uint128(
+                vaults[borrowToken].totalBorrow.toShares(
+                    liquidationAmount,
+                    false
+                )
+            );
+            vaults[borrowToken].totalBorrow.shares -= repaidBorrowShares;
+            vaults[borrowToken].totalBorrow.amount -= uint128(
+                liquidationAmount
+            );
+
+            //Update collateral vault
+            uint128 liquidatedCollShares = uint128(
+                vaults[collateralToken].totalAsset.toShares(
+                    collateralAmountToLiquidate + liquidationReward,
+                    false
+                )
+            );
+            vaults[collateralToken].totalAsset.shares -= liquidatedCollShares;
+            vaults[collateralToken].totalAsset.amount -= uint128(
+                collateralAmountToLiquidate + liquidationReward
+            );
+            userShares[user][borrowToken].borrow -= repaidBorrowShares;
+            userShares[user][collateralToken].collateral -= liquidatedCollShares;
+        }
+
+        //Repay borrowed amount
+        userBorrowToken.transferERC20(
+            address(this),
+            msg.sender,
+            collateralAmountToLiquidate + liquidationReward
+        );
+        //Transfer collateral & liquidation reward to liquidator
+        collateral.transferERC20(
+            address(this),
+            msg.sender,
+            collateralAmountToLiquidate + liquidationReward
+        );
+
+        emit Liquidated(
+            account,
+            msg.sender,
+            amountToLiquidate,
+            collateralAmountToLiquidate + liquidationReward,
+            liquidationReward
+        );
+    }
+
+    function flashloan(
+        address receiverAddress,
+        address[] calldata tokens,
+        uint256[] calldata amounts,
+        bytes calldata data
+    ) external {
+        if (tokens.length == 0) revert EmptyArray();
+        if (tokens.length != amounts.length) revert ArrayMismatch();
+
+        FlashLoanReceiverInterface receiver = FlashLoanReceiverInterface(receiverAddress);
+        uint256[] memory fees = new uint256[](tokens.length);
+        for (uint256 i; i < tokens.length; ) {
+            if (maxFlashloan(tokens[i]) == 0) revert FlashloanPaused(token[i]);
+            fees[i] = flashFee(token[i], amounts[i]);
+            tokens[i].transferERC20(address(this), receiverAddress, amounts[i]);
+            unchecked {
+                ++i;
+            }
+        }
+        if (!receiver.onFlashLoan(
+            msg.sender,
+            tokens,
+            amounts,
+            fees,
+            data
+        )) revert FlashloanFailed();
+
+        uint256 amountPlusFee;
+        for (uint256 i; i < tokens.length; ) {
+            amountPlusFee = amounts[i] + fees[i];
+            token[i].transferERC20(
+                receiverAddress,
+                address(this),
+                amountPlusFee
+            );
+            vaults[token[i]].totalAsset.amount += uint128(fee[i]);
+            unchecked {
+                ++i;
+            }
+        }
+
+        emit FlashloanSuccess(msg.sender, tokens, amounts, fees, data);
+    }
+
+    function accureInterest(
+        address token
+    ) 
+        external
+        returns (
+            uint256 _interestEarned,
+            uint256 _feesAmount,
+            uint256 _feesShare,
+            uint64 _newRate
+        ) 
+    {
+        return _accuredInterest(token);
+    }
+
+    /*//////////////////////////////////////////////
+                NFT FUNCTIONS
+    //////////////////////////////////////////////*/
+
+    function depositNft(
+        address recipient,
+        address nftAddress,
+        uint256 tokenId
+    ) external {
+        _withdrawNFT(msg.sender, recipient, nftAddress, tokenId);
+        if (healthFactor(msg.sender) < MIN_HEALTH_FACTOR) revert BelowHealthFactor();
+        emit WithdrawNFT(msg.sender, recipient, nftAddress, tokenId);
+    }
+
+    function triggerNFTiquidation(
+        address account,
+        address nftAddress,
+        uint256 tokenId
+    ) external {
+        if (!hasDepositedNFT(account, nftAddress, tokenId)) revert InvalidNFT();
+        uint256 totalTokenCollateralValue = getUserTotalTokenCollateral(
+            account
+        );
+
+        if (
+            healthFactor(account) >= MIN_HEALTH_FACTOR ||
+            totalTokenCollateralValue != 0
+        ) revert InvalidNFTLiquidation(account, nftAddress, tokenId);
+
+        Structs.LiquidatedWarning storage warning = nftLiquidationWarning[
+            account
+        ][nftAddress][tokenId];
+        warning.liquidator = msg.sender;
+        warning.liquidationTimestamp = uint64(block.timestamp + NFT_WARNING_DELAY);
+
+        emit LiquidatedWarning(msg.sender, account, nftAddress, tokenId);
+    }
+
+    function stopNFTLiquidation(
+        address account,
+        address nftAddress,
+        uint256 tokenId
+    ) external {
+        if (healthFactor(account) < MIN_HEALTH_FACTOR)
+            revert BelowHealthFactor();
+        delete nftLiquidationWarning[account][nftAddress][tokenId];
+        emit LiquidateNFTStopped(account, nftAddress, tokenId);
+    }
+
+    function executeNFTLiquidation(
+        address account,
+        address nftAddress,
+        uint256 tokenId,
+        address[] calldata repayTokens,
+        uint256[] calldata repayAmounts
+    ) external {
+        if (repayTokens.length == 0) revert EmptyArray();
+        if (repayTokens.length != repayAmounts.length) revert ArrayMismatch();
+        canLiquidateNFT(account, nftAddress, tokenId);
+
+        uint256 totalDebtValue = getUserTotalBorrow(account);
+        uint256 nftFloorPrice = getTokenPrice(nftAddress);
+        uint256 totalRepaidDebtValue;
+        {
+            address borrower = account;
+            address token;
+            uint256 amount;
+            uint256 borrowShares;
+            for (uint256 i; i < repayTokens.length; ) {
+                token = repayTokens[i];
+                amount = repayAmounts[i];
+                _accuredInterest(token);
+                borrowShares = vaults[token].totalBorrow.toShares(amout, true);
+                token.transferERC20(msg.sender, address(this), amount);
+                vaults[token].totalBorrow.shares -= uint128(borrowShares);
+                vaults[token].totalBorrow.amount -= uint128(amount);
+
+                userShares[borrower][token].borrow -= uint128(borrowShares);
+
+                totalRepaidDebtValue += getAmountInUSD(token, amount);
+                unchecked {
+                    ++i;
+                }
+            }
+
+            //must repay at least debt equivalent of half NFT value
+            if (
+                totalDebtValue > nftFloorPrice &&
+                totalRepaidDebtValue <
+                (nftFloorPrice * DEFAULT_LIQUIDATION_CLOSE_FACTOR) / BPS
+            ) revert MustPayMoreDebt();
+        }
+
+        uint256 nftBuyPrice;
+        {
+            address borrower = account;
+            uint256 totalLiquidatorDiscount = (totalRepaidDebtValue *
+                (BPS + NFT_LIQUIDATION_DISCOUNT)) / BPS;
+            nftBuyPrice = nftFloorPrice - totalLiquidatorDiscount;
+
+            address DAI =  supportedERC20s[0];
+            DAI.transferERC20(msg.sender, address(this), nftBuyPrice);
+
+            uint256 shares = vaults[DAI].totalAsset.toShares(
+                nftBuyPrice,
+                false
+            );
+            vaults[DAI].totalAsset.shares += uint128(shares);
+            vaults[DAI].totalAsset.amount += uint128(nftBuyPrice);
+            userShares[borrower][DAI].collateral += shares;
+        }
+
+        _withdrawNFT(account, msg.sender, nftAddres, tokenId);
+
+        emit NFTLiquidated(
+            msg.sender,
+            account,
+            nftAddress,
+            tokenId,
+            totalRepaidDebtValue,
+            nftBuyPrice
+        );
+    }
+
+    function canLiquidateNFT(
+        address account,
+        address nftAddress,
+        uint256 tokenId
+    ) public view {
+        if (healthFactor(account) < MIN_HEALTH_FACTOR)
+             revert BelowIsSolvant();
+        Structs.LiquidateWarn storage warning = nftLiquidationWarning[
+            account
+        ][nftAddress][tokenId];
+        if (warning.liquidator == address(0)) revert NoLiquidationWarning();
+        if (block.timestamp < warning.liquidationTimestamp)
+            revert WarningDelayHasNotPassed();
+        if (
+            block.timestamp <=
+            warning.liquidationTimestamp + NFT_LIQUIDATOR_DELAY &&
+            msg.sender != warning.liquidator
+        ) revert LiquidatorDelayHasNotPassed();
+        
+    }
+    /*//////////////////////////////////////////////
                  GETTER FUNCTIONS
     //////////////////////////////////////////////*/
 
