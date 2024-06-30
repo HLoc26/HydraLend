@@ -53,13 +53,13 @@
         </div>
         <!-- input -->
         <div class="col-span-8 row-span-3 flex items-end">
-          <input type="text" id="amount" class="rounded-md h-3/5 w-full p-3 bg-black" placeholder="0.0" />
+          <input type="text" id="supply-amount" class="rounded-md h-3/5 w-full p-3 bg-black" placeholder="0.0" />
         </div>
         <!-- select unit -->
         <div class="col-span-2 row-span-3 flex justify-center items-end">
           <select name="unit" id="supply-unit" class="unit h-3/5 w-4/5 pl-3 rounded-md cursor-pointer bg-black text-white">
-            <option value="avax" selected>AVAX</option>
-            <option value="ether">ETH</option>
+            <option value="ether" selected>ETH</option>
+            <option value="avax">AVAX</option>
           </select>
         </div>
         <!-- balance -->
@@ -82,7 +82,7 @@
         <!-- Supply APY -->
         <!-- Distribution APY -->
         <div class="flex col-span-12 justify-center items-center row-start-10 row-end-12">
-          <button class="bg-sky-900 p-2 rounded-xl">Confirm</button>
+          <button class="bg-sky-900 p-2 rounded-xl" id="supply-btn">Confirm</button>
         </div>
       </div>
       <!-- ============================================================================================================== -->
@@ -95,11 +95,11 @@
         </div>
         <!-- input pledge -->
         <div class="col-span-4 row-start-2 row-end-4 flex items-start">
-          <input type="text" id="amount" class="rounded-md h-full w-full p-3 bg-black" placeholder="0.0" />
+          <input type="text" id="amount" class="rounded-md h-3/5 w-full p-3 bg-black" placeholder="0.0" />
         </div>
         <!-- select unit -->
         <div class="col-span-1 row-start-2 row-end-4 flex justify-center items-start">
-          <select name="unit" id="borrow20-pledge-unit" class="unit h-full w-full pl-3 rounded-md cursor-pointer bg-black text-white">
+          <select name="unit" id="borrow20-pledge-unit" class="unit h-3/5 w-full pl-3 rounded-md cursor-pointer bg-black text-white">
             <option value="avax" selected>AVAX</option>
             <option value="ether">ETH</option>
           </select>
@@ -108,20 +108,25 @@
         <div class="col-span-2 row-start-2 row-end-4 flex justify-center items-center"><i class="fa fa-chain" style="font-size: large"></i></div>
         <!-- input borrow amount -->
         <div class="col-span-4 row-start-2 row-end-4 flex items-start">
-          <input type="text" id="amount" class="rounded-md h-full w-full p-3 bg-black" placeholder="0.0" />
+          <input type="text" id="borrow-amount" class="rounded-md h-3/5 w-full p-3 bg-black" placeholder="0.0" />
         </div>
         <!-- select unit -->
         <div class="col-span-1 row-start-2 row-end-4 flex justify-center items-start">
-          <select name="unit" id="borrow20-unit" class="unit h-full w-full pl-3 rounded-md cursor-pointer bg-black text-white">
+          <select name="unit" id="borrow20-unit" class="unit h-3/5 w-full pl-3 rounded-md cursor-pointer bg-black text-white">
             <option value="avax" selected>AVAX</option>
             <option value="ether">ETH</option>
           </select>
         </div>
         <!-- balance -->
-        <div class="col-span-12 row-span-1 text-md flex items-top gap-0.5">
+        <!-- <div class="col-span-12 row-start-3 row-end-4 text-md flex items-top gap-0.5">
           <span>Balance: </span>
           <span id="20-balance"></span>
           <span id="20-selected-unit"></span>
+        </div> -->
+        <!-- input token -->
+        <div class="col-start-1 col-end-12 row-start-4 row-end-6 flex items-center">
+          <label for="" class="text-left">Token Address</label>
+          <input type="text" id="20-token" class="rounded-md h-full w-full p-3 bg-black" placeholder="0.0" />
         </div>
         <!-- changes info here when changin between supply and borrow -->
         <div id="side-info" class="max-h-1/6 grid grid-cols-4 grid-rows-2 col-start-2 col-end-12 row-span-4 gap-x-20 p-5 rounded-md">
@@ -137,7 +142,7 @@
         <!-- Supply APY -->
         <!-- Distribution APY -->
         <div class="flex col-span-12 justify-center items-center row-start-10 row-end-12">
-          <button class="bg-sky-900 p-5 px-8 rounded-xl">Confirm</button>
+          <button class="bg-sky-900 p-5 px-8 rounded-xl" id="confirm20">Confirm</button>
         </div>
       </div>
       <!-- ============================================================================================================== -->
@@ -150,11 +155,11 @@
         </div>
         <!-- input pledge -->
         <div class="col-span-4 row-start-2 row-end-4 flex items-start">
-          <input type="text" id="amount" class="rounded-md h-full w-full p-3 bg-black" placeholder="0.0" />
+          <input type="text" id="amount" class="rounded-md h-3/5 w-full p-3 bg-black" placeholder="0.0" />
         </div>
         <!-- select unit -->
         <div class="col-span-1 row-start-2 row-end-4 flex justify-center items-start">
-          <select name="unit" id="borrow721-pledge-unit" class="unit h-full w-full pl-3 rounded-md cursor-pointer bg-black text-white">
+          <select name="unit" id="borrow20-pledge-unit" class="unit h-3/5 w-full pl-3 rounded-md cursor-pointer bg-black text-white">
             <option value="avax" selected>AVAX</option>
             <option value="ether">ETH</option>
           </select>
@@ -163,20 +168,29 @@
         <div class="col-span-2 row-start-2 row-end-4 flex justify-center items-center"><i class="fa fa-chain" style="font-size: large"></i></div>
         <!-- input borrow amount -->
         <div class="col-span-4 row-start-2 row-end-4 flex items-start">
-          <input type="text" id="amount" class="rounded-md h-full w-full p-3 bg-black" placeholder="0.0" />
+          <input type="text" id="amount" class="rounded-md h-3/5 w-full p-3 bg-black" placeholder="0.0" />
         </div>
         <!-- select unit -->
         <div class="col-span-1 row-start-2 row-end-4 flex justify-center items-start">
-          <select name="unit" id="borrow721-unit" class="unit h-full w-full pl-3 rounded-md cursor-pointer bg-black text-white">
+          <select name="unit" id="borrow721-unit" class="unit h-3/5 w-full pl-3 rounded-md cursor-pointer bg-black text-white">
             <option value="avax" selected>AVAX</option>
             <option value="ether">ETH</option>
           </select>
         </div>
         <!-- balance -->
-        <div class="col-span-12 row-span-1 text-md flex items-top gap-0.5">
+        <!-- <div class="col-span-12 row-start-3 row-end-4 text-md flex items-top gap-0.5">
           <span>Balance: </span>
-          <span id="721-balance"></span>
-          <span id="721-selected-unit"></span>
+          <span id="20-balance"></span>
+          <span id="20-selected-unit"></span>
+        </div> -->
+        <!-- input address -->
+        <div class="col-span-5 row-start-4 row-end-6 flex items-start">
+          <label for="" class="text-left">NFT address</label>
+          <input type="text" id="nft-addr" class="rounded-md h-full w-full p-3 bg-black" placeholder="0.0" />
+        </div>
+        <div class="col-start-7 col-end-12 row-start-4 row-end-6 flex items-start">
+          <label for="" class="text-left">Token ID</label>
+          <input type="text" id="nft-token" class="rounded-md h-full w-full p-3 bg-black" placeholder="0.0" />
         </div>
         <!-- changes info here when changin between supply and borrow -->
         <div id="side-info" class="max-h-1/6 grid grid-cols-4 grid-rows-2 col-start-2 col-end-12 row-span-4 gap-x-20 p-5 rounded-md">
@@ -192,7 +206,7 @@
         <!-- Supply APY -->
         <!-- Distribution APY -->
         <div class="flex col-span-12 justify-center items-center row-start-10 row-end-12">
-          <button class="bg-sky-900 p-5 px-8 rounded-xl">Confirm</button>
+          <button class="bg-sky-900 p-5 px-8 rounded-xl" id="confirm721">Confirm</button>
         </div>
       </div>
     </section>
