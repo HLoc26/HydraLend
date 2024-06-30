@@ -1,5 +1,5 @@
 import { ethers } from "./ethers-5.1.esm.min.js";
-
+import { contractAddr, abi, avaxAddr } from "./constants.js";
 var connectedAddr = "0x0";
 
 // Check for user's chain
@@ -120,4 +120,84 @@ async function updateBalanceForUnit(unit, section) {
   }
 
   updateBalanceDisplay(convertedBalance, unit.toUpperCase(), section);
+}
+
+// Fund
+async function supply() {
+  const amount = document.getElementById("supply-amount").value;
+  console.log(`Funding with ${amount}...`);
+  if (typeof window.ethereum !== "undefined") {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(contractAddr, abi, signer);
+    try {
+      const transactionResponse = await contract.supply(avaxAddr, ethers.utils.parseEther(amount), 0, {
+        gasLimit: 50000,
+        value: ethers.utils.parseEther(amount),
+      });
+      await listenForTransactionMine(transactionResponse, provider);
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    document.getElementById("supply-btn").innerHTML = "Please install MetaMask";
+  }
+}
+
+const supplyBtn = document.getElementById("supply-btn");
+supplyBtn.onclick = supply;
+
+async function depositNft() {
+  var recipient = contractAddr;
+  var nftAddr = document.getElementById("nft-addr").value;
+  var tokenId = document.getElementById("nft-token").value;
+  if (typeof window.ethereum !== "undefined") {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(contractAddr, abi, signer);
+    try {
+      const transactionResponse = await contract.depositNft(recipient, nftAddr, tokenId);
+      await listenForTransactionMine(transactionResponse, provider);
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    document.getElementById("confirm721").innerHTML = "Please install MetaMask";
+  }
+}
+const confirm721 = document.getElementById("confirm721");
+confirm721.onclick = depositNft;
+
+async function borrow() {
+  var token = document.getElementById("20-token").value;
+  var amount = document.getElementById("borrow-amount").value;
+  if (typeof window.ethereum !== "undefined") {
+    const provider = new ethers.providers.Web3Provider(windows.ethereum);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(contractAddr, abi, signer);
+    try {
+      const transactionResponse = await contract.borrow(token, amount);
+      await listenForTransactionMine(transactionResponse, provider);
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    document.getElementById("confirm20").innerHTML = "Please install MetaMask";
+  }
+}
+const confirm20 = document.getElementById("confirm20");
+confirm20.onclick = depositNft;
+
+function listenForTransactionMine(transactionResponse, provider) {
+  console.log(`Mining ${transactionResponse.hash}`);
+  return new Promise((resolve, reject) => {
+    try {
+      provider.once(transactionResponse.hash, (transactionReceipt) => {
+        console.log(`Completed with ${transactionReceipt.confirmations} confirmations. `);
+        resolve();
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
 }
