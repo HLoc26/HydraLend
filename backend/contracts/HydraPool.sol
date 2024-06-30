@@ -117,6 +117,8 @@ contract HydraPool is Pausing, NFTPledging {
     /*/////////////////////////////////////////////
                 ERC20 FUNCTIONS
     //////////////////////////////////////////////*/
+
+    //dua token de lay lai suat
     function supply(
         address token,
         uint256 amount,
@@ -137,6 +139,7 @@ contract HydraPool is Pausing, NFTPledging {
         emit Deposit(msg.sender, token, amount, shares);
     }
 
+    //Muon token
     function borrow(address token, uint256 amount) external {
         WhenNotPaused(token);
         if(!vaultAboveReserveRatio(token,amount))
@@ -154,7 +157,7 @@ contract HydraPool is Pausing, NFTPledging {
 
         emit Borrow(msg.sender, token, amount, shares);
     }
-
+    //Tra token da muon
     function repay(address token, uint256 amount) external {
         _accuredInterest(token);
         uint256 userBorrowShare = userShares[msg.sender][token].borrow;
@@ -172,7 +175,7 @@ contract HydraPool is Pausing, NFTPledging {
 
         emit Repay(msg.sender, token, amount, shares);
     }
-
+    //Rut ra
     function withdraw(
         address token,
         uint256 amount,
@@ -180,7 +183,7 @@ contract HydraPool is Pausing, NFTPledging {
     ) external {
         _withdraw(token, amount, maxShareIn, false);
     }
-
+    //Khoi
     function redeem(
         address token,
         uint256 shares,
@@ -304,7 +307,7 @@ contract HydraPool is Pausing, NFTPledging {
             liquidationReward
         );
     }
-
+    //
     function flashloan(
         address receiverAddress,
         address[] calldata tokens,
@@ -348,7 +351,7 @@ contract HydraPool is Pausing, NFTPledging {
 
         emit FlashloanSuccess(msg.sender, tokens, amounts, fees, data);
     }
-
+    //Lai tich luy
     function accureInterest(
         address token
     ) 
@@ -366,7 +369,7 @@ contract HydraPool is Pausing, NFTPledging {
     /*//////////////////////////////////////////////
                 NFT FUNCTIONS
     //////////////////////////////////////////////*/
-
+    //Cam NFT
     function depositNft(
         address recipient,
         address nftAddress,
@@ -376,7 +379,7 @@ contract HydraPool is Pausing, NFTPledging {
         if (healthFactor(msg.sender) < MIN_HEALTH_FACTOR) revert BelowHealthFactor();
         emit WithdrawNFT(msg.sender, recipient, nftAddress, tokenId);
     }
-
+    //
     function triggerNFTiquidation(
         address account,
         address nftAddress,
@@ -836,8 +839,8 @@ contract HydraPool is Pausing, NFTPledging {
             _vaultInfo.feeToProtocolRate = params.feeToProtocolRate;
             _vaultInfo.flashFeeRate = params.flashFeeRate;
             _vaultInfo.baseRate = params.baseRate;
-            _vaultInfo.additionalParam1 = params.additionalParam1;
-            _vaultInfo.additionalParam2 = params.additionalParam2;
+            _vaultInfo.slope1 = params.slope1;
+            _vaultInfo.slope2 = params.slope2;
             _vaultInfo.optimalUtilization = params.optimalUtilization;
 
             emit NewVaultSetup(token, params);
