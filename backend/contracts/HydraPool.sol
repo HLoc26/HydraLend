@@ -123,7 +123,7 @@ contract HydraPool is Pausing, NFTPledging {
         address token,
         uint256 amount,
         uint256 minSharesOut
-    ) external {
+    )  payable external {
         WhenNotPaused(token);
         allowedToken(token);
         _accuredInterest(token);
@@ -140,7 +140,7 @@ contract HydraPool is Pausing, NFTPledging {
     }
 
     //Muon token
-    function borrow(address token, uint256 amount) external {
+    function borrow(address token, uint256 amount) payable external {
         WhenNotPaused(token);
         if(!vaultAboveReserveRatio(token,amount))
             revert InsufficientBalance();
@@ -158,7 +158,7 @@ contract HydraPool is Pausing, NFTPledging {
         emit Borrow(msg.sender, token, amount, shares);
     }
     //Tra token da muon
-    function repay(address token, uint256 amount) external {
+    function repay(address token, uint256 amount) payable external {
         _accuredInterest(token);
         uint256 userBorrowShare = userShares[msg.sender][token].borrow;
         uint256 shares = vaults[token].totalBorrow.toShares(amount, true);
@@ -180,7 +180,7 @@ contract HydraPool is Pausing, NFTPledging {
         address token,
         uint256 amount,
         uint256 maxShareIn
-    ) external {
+    ) external payable {
         _withdraw(token, amount, maxShareIn, false);
     }
     //Khoi

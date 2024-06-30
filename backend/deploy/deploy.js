@@ -2,10 +2,10 @@ const hre = require("hardhat");
 const { verify } = require("../utils/verify");
 const { getAmountInWei, developmentChains } = require("../utils/helpers");
 
-// mumbai addresses
-const DAI = "0xd393b1E02dA9831Ff419e22eA105aAe4c47E1253";
-const daiPriceFeed = "0x0FCAa9c899EC5A91eBc3D5Dd869De833b06fB046";
-const daiVaultParams = {
+// fuji addresses
+const AVAX = "0xd393b1E02dA9831Ff419e22eA105aAe4c47E1253";
+const avaxPriceFeed = "0x0FCAa9c899EC5A91eBc3D5Dd869De833b06fB046";
+const avaxVaultParams = {
   reserveRatio: 20000, // 20%
   feeToProtocolRate: 1000, // 1%
   flashFeeRate: 500, // 0.5%
@@ -20,9 +20,10 @@ async function main() {
 
   // Deploy Lending Pool contract
   const pool = await ethers.deployContract("HydraPool", [
-    DAI,
-    daiPriceFeed,
-    daiVaultParams,
+    AVAX,
+    avaxPriceFeed
+    ,
+    avaxVaultParams,
   ]);
   await pool.waitForDeployment();
 
@@ -37,7 +38,7 @@ async function main() {
     await pool.deployTransaction.wait(6);
 
     // args represent contract constructor arguments
-    const args = [DAI, daiPriceFeed, daiVaultParams];
+    const args = [AVAX, avaxPriceFeed, avaxVaultParams];
     await verify(pool.address, args);
   }
 }
